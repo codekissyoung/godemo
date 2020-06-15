@@ -2,49 +2,52 @@ package main
 
 import (
 	"fmt"
-	"runtime"
+	"math/rand"
 	"sync"
+	"time"
 )
 
-var wg sync.WaitGroup
-var counter int
-var mu sync.Mutex
+const (
+	numberGoroutines = 4
+	taskLoad         = 20
+)
+
+var (
+	wg sync.WaitGroup
+)
+
+func init() {
+	rand.Seed(time.Now().Unix())
+}
 
 func main() {
 
-	wg.Add(2)
-	go incCounter(1)
-	go incCounter(2)
-	wg.Wait()
+	taskChan := make(chan string, taskLoad)
 
-	fmt.Println("Final Counter : ", counter)
+	for workerID := 0; workerID < numberGoroutines; workerID++ {
+		wg.Add(1)
+		go worker(taskChan, workerID)
+	}
+
+	for post := 1; post <= taskLoad; post++ {
+		taskChan <- fmt.Sprintf("Task : %d", post)
+	}
+
+	close(taskChan)
+
+	wg.Wait()
 }
 
-func incCounter(id int) {
+func worker(taskChan chan string, worker int) {
 	defer wg.Done()
-	for count := 0; count < 2; count++ {
-		mu.Lock() // ------------------ 临界区 ------------------
-		{
-			value := counter
-			runtime.Gosched()
-			value++
-			counter = value
+	for {
+		task, ok := <-taskChan
+		if !ok {
+			fmt.Println("worker ", worker, " shutding down")
+			return
 		}
-		mu.Unlock() // ----------------------------------------
+		fmt.Println("worker ", worker, " start task ", task)
+		time.Sleep(time.Duration(rand.Int63n(100)) * time.Millisecond)
+		fmt.Println("worker ", worker, " Complete task ", task)
 	}
 }
-
-var shutdown int64
-
-//
-//func doWork(name string) {
-//	defer wg.Done()
-//	for {
-//		fmt.Println("Doing ", name, " Work ")
-//		time.Sleep(250 * time.Millisecond)
-//		if atomic.LoadInt64(&shutdown) == 1 {
-//			fmt.Println("Work ", name, " Shutting Down")
-//			break
-//		}
-//	}
-//}
