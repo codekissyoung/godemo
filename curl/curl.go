@@ -15,7 +15,15 @@ func main() {
 		log.Fatalln(err)
 	}
 
-	n, err := io.Copy(os.Stdout, resp.Body)
+	file, err := os.Create(os.Args[2])
+	if err != nil {
+		log.Fatalln(err)
+	}
+	defer file.Close()
+
+	dest := io.MultiWriter(os.Stdout, file) // 同时写入标准输出 与 文件
+
+	n, err := io.Copy(dest, resp.Body)
 	if err != nil {
 		log.Fatalln(err)
 	}
