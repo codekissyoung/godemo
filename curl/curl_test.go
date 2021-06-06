@@ -42,7 +42,6 @@ func TestDownload(t *testing.T) {
 }
 
 // go test -run="none" -bench=. -benchtime="1s" -benchmem -v
-
 func BenchmarkFormat(b *testing.B) {
 	number := int64(10)
 	b.ResetTimer()

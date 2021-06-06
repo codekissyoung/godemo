@@ -21,20 +21,15 @@ func init() {
 }
 
 func main() {
-
 	taskChan := make(chan string, taskLoad)
-
 	for workerID := 0; workerID < numberGoroutines; workerID++ {
 		wg.Add(1)
 		go worker(taskChan, workerID)
 	}
-
 	for post := 1; post <= taskLoad; post++ {
 		taskChan <- fmt.Sprintf("Task : %d", post)
 	}
-
 	close(taskChan)
-
 	wg.Wait()
 }
 
