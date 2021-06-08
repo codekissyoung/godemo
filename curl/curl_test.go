@@ -10,9 +10,7 @@ const checkMarkRight = "\u2713"
 const checkMarkFault = "\u2717"
 
 // go test -v
-
 func TestDownload(t *testing.T) {
-
 	urls := []struct {
 		url        string
 		statusCode int
@@ -38,7 +36,6 @@ func TestDownload(t *testing.T) {
 			t.Errorf("Can not get the url %v", checkMarkFault)
 		}
 	}
-
 }
 
 // go test -run="none" -bench=. -benchtime="1s" -benchmem -v

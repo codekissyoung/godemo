@@ -44,8 +44,7 @@ func main() {
 func countLines(reader io.Reader, counts map[string]int) {
 	input := bufio.NewScanner(reader)
 	for input.Scan() {
-		// 不统计空行
-		if input.Text() != "" {
+		if input.Text() != "" { // 不统计空行
 			counts[input.Text()]++
 		}
 	}
