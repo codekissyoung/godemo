@@ -11,13 +11,9 @@ import (
 const timeout = 10 * time.Second
 
 func main() {
-
 	log.Println("Start Working ")
-
 	r := runner.New(timeout)
-
 	r.Add(createTask(), createTask(), createTask())
-
 	if err := r.Start(); err != nil {
 		switch err {
 		case runner.ErrTimeout:
@@ -28,7 +24,6 @@ func main() {
 			os.Exit(2)
 		}
 	}
-
 	log.Println("Process ended ")
 }
 
