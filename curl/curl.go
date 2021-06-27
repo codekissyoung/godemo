@@ -10,7 +10,7 @@ import (
 
 func main() {
 
-	resp, err := http.Get(os.Args[1])
+	rsp, err := http.Get(os.Args[1])
 	if err != nil {
 		log.Fatalln(err)
 	}
@@ -21,17 +21,19 @@ func main() {
 	}
 	defer file.Close()
 
+	//b, err := ioutil.ReadAll(rsp.Body)
+	//fmt.Println((string(b)))
+
 	dest := io.MultiWriter(os.Stdout, file) // 同时写入标准输出 与 文件
 
-	n, err := io.Copy(dest, resp.Body)
+	n, err := io.Copy(dest, rsp.Body)
 	if err != nil {
 		log.Fatalln(err)
 	}
 
 	fmt.Println("Read", n, "Bytes")
 
-	if err := resp.Body.Close(); err != nil {
+	if err := rsp.Body.Close(); err != nil {
 		log.Fatalln(err)
 	}
-
 }

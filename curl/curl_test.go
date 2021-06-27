@@ -22,19 +22,18 @@ func TestDownload(t *testing.T) {
 			200,
 		},
 	}
-
 	for _, u := range urls {
 		resp, err := http.Get(u.url)
 		if err != nil {
 			t.Errorf("Should be able to Get the url %v", checkMarkFault)
 			return
 		}
-		defer resp.Body.Close()
 		if resp.StatusCode == u.statusCode {
 			t.Logf("Can get the url %v", checkMarkRight)
 		} else {
 			t.Errorf("Can not get the url %v", checkMarkFault)
 		}
+		resp.Body.Close()
 	}
 }
 
