@@ -13,7 +13,7 @@ func init() {
 	rand.Seed(time.Now().UnixNano())
 }
 
-// 模拟乒乓球塞
+// 模拟乒乓球
 func main() {
 	court := make(chan int)
 
@@ -39,6 +39,7 @@ func player(name string, court chan int) {
 
 		time.Sleep(time.Second / 2)
 		n := rand.Intn(100)
+
 		// 被 13 整除表示输球
 		if n%13 == 0 {
 			fmt.Println("Player ", name, " Missed")
